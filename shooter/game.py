@@ -93,11 +93,14 @@ while run:
     
     misses_text = font_1.render(f'Fallos: {fallos}', 1, WHITE)
     points_text = font_1.render(f'Puntos: {puntos}', 1, WHITE)
+    life_text = font_1.render(f'Vidas: {vidas}', 1, (91, 245, 39))
 
     if not finish:
         screen.blit(background, (0, 0))
         screen.blit(points_text, (15, 10))
         screen.blit(misses_text, (15, 40))
+        screen.blit(life_text, (ANCHO - 130, 15))
+
         player.reset()
         player.update()
         aliens.draw(screen)
@@ -109,11 +112,26 @@ while run:
             puntos += 1
             enemy = Enemy(ENEMY_IMG, randint(0, ANCHO - 50), -50, 50, 50, randint(1, 7))
             aliens.add(enemy)
+
+        if sprite.spritecollide(player, aliens, True):
+            vidas -= 1
+            enemy = Enemy(ENEMY_IMG, randint(0, ANCHO - 50), -50, 50, 50, randint(1, 7))
+            aliens.add(enemy)
+
             
         # CONDICION VICTORIA
         if puntos == 10:
             finish = True
             screen.fill(BLACK)
+            victory_text = font_1.render(f'ERES EL MEJOR, FELICIDADES!', 1, (238, 245, 39))
+            screen.blit(victory_text, ((ANCHO - 350)// 2, ALTO // 2))
+
+        # CONDICION DERROTA
+        if vidas == 0 or fallos >= 10:
+            finish = True
+            screen.fill(BLACK)
+
+
 
 
     # NO TOCAR
